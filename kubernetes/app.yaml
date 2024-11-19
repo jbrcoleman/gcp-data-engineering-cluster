@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: spark-sa
+  namespace: data-processing
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: spark-role
+  namespace: data-processing
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create", "get", "list", "watch", "delete"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: spark-role-binding
+  namespace: data-processing
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: spark-role
+subjects:
+- kind: ServiceAccount
+  name: spark-sa
+  namespace: data-processing
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nyc-taxi-data-processing
+  namespace: data-processing
+spec:
+  template:
+    spec:
+      serviceAccountName: spark-sa
+      containers:
+      - name: spark-processor
+        image: nyc-taxi-spark-processor:v1
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2"
+          limits:
+            memory: "8Gi"
+            cpu: "4"
+      restartPolicy: OnFailure
+  backoffLimit: 3
