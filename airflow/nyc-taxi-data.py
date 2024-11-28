@@ -1,4 +1,4 @@
-rom airflow import DAG
+from airflow import DAG
 from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 from datetime import datetime, timedelta
@@ -14,14 +14,14 @@ default_args = {
 with DAG(
     'nyc_taxi_data_pipeline',
     default_args=default_args,
-    schedule_interval='@monthly',
+    schedule='@monthly',
     catchup=False
 ) as dag:
     
     # Task to load raw data from GCS to BigQuery
     load_raw_data = GCSToBigQueryOperator(
         task_id='load_raw_taxi_data',
-        bucket='nyc-tlc-trip-records',
+        bucket='nyc-taxi-data-bucket-tribal-flux-435217-i0',
         source_objects=['yellow_tripdata_{{ macros.ds_format(ds, "%Y-%m", "%Y-%m") }}.parquet'],
         destination_project_dataset_table='nyc_taxi_data.raw_trips',
         source_format='PARQUET',

@@ -42,7 +42,11 @@ spec:
       serviceAccountName: spark-sa
       containers:
       - name: spark-processor
-        image: nyc-taxi-spark-processor:v1
+        image: us-central1-docker.pkg.dev/tribal-flux-435217-i0/prject/spark
+        volumeMounts:
+        - name: gcs-key-volume
+          mountPath: "/etc/secrets"
+          readOnly: true
         resources:
           requests:
             memory: "4Gi"
@@ -50,5 +54,9 @@ spec:
           limits:
             memory: "8Gi"
             cpu: "4"
+      volumes:
+      - name: gcs-key-volume
+        secret:
+          secretName: gcs-key
       restartPolicy: OnFailure
   backoffLimit: 3

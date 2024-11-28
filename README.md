@@ -60,11 +60,9 @@ kubectl apply -f k8s-deployment.yaml
 - Average fare calculations
 - Trip distance analysis
 
-## Monitoring
-Integrated Prometheus and Grafana dashboards (configuration not shown)
-
 ## Future Improvements
 - Add more complex data transformations
 - Implement real-time streaming
 - Enhanced error handling
 - Cost optimization strategies
+- monitoring

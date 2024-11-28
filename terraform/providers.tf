@@ -8,6 +8,6 @@ terraform {
 }
 
 provider "google" {
-  project = "your-gcp-project-id"
+  project = "tribal-flux-435217-i0"
   region  = "us-central1"
 }

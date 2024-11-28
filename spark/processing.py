@@ -5,6 +5,8 @@ def process_taxi_data(input_path, output_path):
     # Initialize Spark Session
     spark = SparkSession.builder \
         .appName("NYCTaxiDataProcessing") \
+        .config("spark.hadoop.google.cloud.auth.service.account.enable", "true") \
+        .config("spark.hadoop.google.cloud.service.account.path", "/app/keys/gcs-key.json") \
         .getOrCreate()
 
     # Read Parquet files
@@ -25,6 +27,6 @@ def process_taxi_data(input_path, output_path):
 
 if __name__ == "__main__":
     process_taxi_data(
-        input_path="gs://nyc-tlc-trip-records/yellow_tripdata_*.parquet",
-        output_path="gs://nyc-taxi-processed-data/aggregated_trips/"
+        input_path="gs://nyc-taxi-data-bucket-tribal-flux-435217-i0/yellow_tripdata_*.parquet",
+        output_path="gs://nyc-taxi-data-bucket-tribal-flux-435217-i0/aggregated_trips/"
     )
